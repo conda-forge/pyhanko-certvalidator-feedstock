@@ -1,0 +1,53 @@
+schema_version: 1
+
+context:
+  version: 0.33.0
+
+package:
+  name: pyhanko-certvalidator
+  version: ${{ version }}
+
+source:
+  url: https://files.pythonhosted.org/packages/source/p/pyhanko-certvalidator/pyhanko_certvalidator-${{ version }}.tar.gz
+  sha256: a4c3309f99c77cdcad24532f75340bd8cc8b108aa8992b8102d44f250ebd449c
+
+build:
+  number: 0
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv
+
+requirements:
+  host:
+    - python ${{ python_min }}.*
+    - pip
+    - setuptools >=80.8.0
+  run:
+    - python >=${{ python_min }}
+    - asn1crypto >=1.5.1
+    - cryptography >=48.0.0
+    - oscrypto >=1.1.0
+    - requests >=2.31.0
+    - uritools >=3.0.1
+    - aiohttp >=3.9,<3.15
+    - certifi >=2026.10.19  # excludes bundles trusting compromised eMudhra/emSign roots
+
+tests:
+  - python:
+      imports:
+        - pyhanko_certvalidator
+        - pyhanko_certvalidator.fetchers
+      pip_check: true
+      python_version:
+        - ${{ python_min }}.*
+        - '*'
+
+about:
+  summary: Validates X.509 certificates and paths; forked from wbond/certvalidator
+  license: MIT
+  license_file: LICENSE
+  homepage: https://github.com/MatthiasValvekens/certvalidator
+
+extra:
+  recipe-maintainers:
+    - mrakitin
+    - killua156
